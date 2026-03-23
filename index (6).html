@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Advisor — UnitedSignals × FlowNiq</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --white:#FFFFFF;
+  --gray50:#F7F7F6;
+  --gray100:#EFEFED;
+  --gray200:#E2E1DE;
+  --gray400:#AEADA8;
+  --gray600:#6B6A65;
+  --gray800:#2C2B28;
+  --black:#0F0F0E;
+  --blue:#1a4a7a;
+  --blue2:#1e5799;
+  --blue3:#2878c8;
+  --blue4:#3b8fe0;
+  --serif:'Instrument Serif',Georgia,serif;
+  --sans:'Inter',system-ui,sans-serif;
+}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--sans);
+  background:var(--white);
+  color:var(--black);
+  font-size:15px;line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+  min-height:100vh;
+}
+
+/* ═══ HERO CANVAS ═══ */
+.hero-canvas{
+  background:var(--white);
+  padding:clamp(14px,3vw,40px) clamp(14px,5vw,80px) clamp(40px,6vw,80px);
+  min-height:100vh;display:flex;flex-direction:column;
+}
+.hero-section{
+  position:relative;
+  flex:1;
+  background:linear-gradient(135deg,#1a4a7a 0%,#1e5799 15%,#2878c8 35%,#3b8fe0 55%,#2060b0 75%,#0d2e5a 100%);
+  overflow:hidden;
+  display:flex;flex-direction:column;
+  border-radius:clamp(14px,2vw,20px);
+}
+.hero-section::before{content:'';position:absolute;width:60%;height:70%;background:radial-gradient(ellipse,rgba(120,180,255,.35) 0%,transparent 65%);top:-15%;right:-10%;pointer-events:none}
+.hero-section::after{content:'';position:absolute;width:50%;height:60%;background:radial-gradient(ellipse,rgba(10,30,70,.5) 0%,transparent 65%);bottom:-10%;left:-5%;pointer-events:none}
+
+/* nav */
+.hero-nav{
+  position:relative;z-index:10;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:clamp(16px,2vw,28px) clamp(18px,3.5vw,48px) 0;
+  flex-wrap:wrap;gap:10px;
+}
+.nav-logo{font-weight:700;font-size:15px;letter-spacing:.1em;color:#fff;display:flex;align-items:center;gap:10px}
+.nav-x{color:rgba(255,255,255,.3);font-size:18px;font-weight:300}
+.nav-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.nbtn{font-size:12.5px;font-weight:500;padding:8px 18px;border-radius:7px;cursor:pointer;font-family:var(--sans);transition:all .15s;text-decoration:none;display:inline-flex;align-items:center}
+.ng{background:transparent;color:rgba(255,255,255,.75);border:none}.ng:hover{color:#fff}
+.no{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.4)}.no:hover{background:rgba(255,255,255,.1)}
+.ns{background:var(--black);color:#fff;border:1.5px solid var(--black)}.ns:hover{background:var(--gray800)}
+
+/* hero body */
+.hero-body{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:clamp(28px,5vw,56px) clamp(18px,5vw,60px) clamp(28px,4vw,48px);
+  position:relative;z-index:2;
+}
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:7px;
+  font-size:12px;font-weight:500;letter-spacing:.08em;
+  color:rgba(255,255,255,.65);background:rgba(255,255,255,.1);
+  border:1px solid rgba(255,255,255,.18);padding:5px 14px;
+  border-radius:100px;margin-bottom:clamp(16px,2.5vw,28px);
+}
+.eyebrow-dot{width:5px;height:5px;border-radius:50%;background:#7DD3FC}
+.hero-h1{
+  font-family:var(--serif);
+  font-size:clamp(30px,5.5vw,68px);
+  font-weight:400;line-height:1.07;letter-spacing:-.02em;
+  color:#fff;margin-bottom:14px;max-width:740px;
+}
+.hero-h1 em{font-style:italic;color:rgba(255,255,255,.5)}
+.hero-sub{
+  font-size:clamp(13px,1.5vw,16px);font-weight:300;
+  color:rgba(255,255,255,.65);line-height:1.7;
+  max-width:500px;margin:0 auto clamp(24px,3.5vw,40px);
+}
+
+/* domain field inside input card */
+.input-card-domain{
+  padding:0 20px 14px;
+  border-top:1px solid var(--gray100);
+  padding-top:12px;
+}
+.icd-label{
+  font-size:10px;font-weight:600;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--gray400);
+  display:flex;align-items:center;gap:5px;margin-bottom:7px;
+}
+.icd-required{color:#dc2626;font-size:12px;line-height:1}
+.icd-input-wrap{
+  display:flex;align-items:center;
+  background:var(--gray50);border:1px solid var(--gray200);
+  border-radius:8px;overflow:hidden;
+  transition:border-color .14s,box-shadow .14s;
+}
+.icd-input-wrap:focus-within{
+  border-color:var(--blue3);
+  box-shadow:0 0 0 3px rgba(40,120,200,.08);
+  background:var(--white);
+}
+.icd-input-wrap.err-state{border-color:#fca5a5;background:#fff5f5}
+.icd-prefix{
+  padding:0 0 0 12px;font-size:12.5px;color:var(--gray400);
+  white-space:nowrap;font-weight:400;user-select:none;
+}
+.icd-input-wrap input{
+  flex:1;border:none;outline:none;background:transparent;
+  font-family:var(--sans);font-size:13.5px;font-weight:400;
+  color:var(--black);padding:9px 12px;min-width:0;
+}
+.icd-input-wrap input::placeholder{color:var(--gray400)}
+.icd-err{font-size:11px;color:#dc2626;margin-top:5px;display:none}
+
+/* ── INPUT BOX ── */
+.input-card{
+  width:100%;max-width:660px;
+  background:rgba(255,255,255,.97);
+  border-radius:16px;
+  overflow:hidden;
+  box-shadow:0 16px 56px rgba(0,0,0,.25);
+  margin-bottom:18px;
+}
+.input-card-head{
+  padding:16px 20px 0;
+  display:flex;align-items:center;gap:8px;
+}
+.ic-label{
+  font-size:10px;font-weight:600;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--gray400);
+  display:flex;align-items:center;gap:6px;
+}
+.ic-dot{width:5px;height:5px;border-radius:50%;background:var(--blue3);animation:blink 2s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+
+textarea#prob{
+  width:100%;border:none;outline:none;resize:none;
+  font-family:var(--sans);font-size:14px;font-weight:300;
+  color:var(--black);line-height:1.7;
+  padding:10px 20px 16px;min-height:100px;background:transparent;
+}
+textarea#prob::placeholder{color:var(--gray400);font-style:italic}
+
+.input-card-foot{
+  padding:10px 14px;border-top:1px solid var(--gray100);
+  background:var(--gray50);
+  display:flex;align-items:center;justify-content:space-between;
+  gap:10px;flex-wrap:wrap;
+}
+.chips{display:flex;flex-wrap:wrap;gap:5px}
+.chip{
+  font-size:10.5px;color:var(--gray600);
+  background:var(--white);border:1px solid var(--gray200);
+  border-radius:100px;padding:4px 11px;
+  cursor:pointer;transition:all .14s;
+}
+.chip:hover{color:var(--blue);border-color:rgba(26,74,122,.3)}
+
+.go-btn{
+  font-family:var(--sans);font-size:12.5px;font-weight:600;
+  padding:10px 22px;border-radius:8px;border:none;
+  background:var(--black);color:#fff;
+  cursor:pointer;transition:all .14s;
+  display:flex;align-items:center;gap:7px;white-space:nowrap;
+  flex-shrink:0;
+}
+.go-btn:hover{background:var(--gray800)}
+.go-btn:active{transform:scale(.97)}
+.go-btn:disabled{opacity:.38;cursor:not-allowed}
+
+/* pills */
+.hero-pills{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:0}
+.hero-pill{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:11.5px;font-weight:500;color:rgba(255,255,255,.7);
+  background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);
+  padding:5px 13px;border-radius:100px;cursor:pointer;transition:all .15s;
+}
+.hero-pill:hover{background:rgba(255,255,255,.18);color:#fff}
+
+
+/* ════════════════════════════════════
+   GENERATION OVERLAY
+════════════════════════════════════ */
+.gen-overlay{
+  position:fixed;inset:0;
+  background:rgba(15,15,14,.75);
+  backdrop-filter:blur(6px);
+  z-index:100;
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;
+  transition:opacity .4s;
+}
+.gen-overlay.show{opacity:1;pointer-events:all}
+
+.gen-box{
+  background:var(--white);
+  border-radius:20px;
+  width:min(540px,92vw);
+  padding:40px 36px 36px;
+  text-align:center;
+  box-shadow:0 32px 80px rgba(0,0,0,.3);
+  transform:translateY(20px);
+  transition:transform .4s;
+}
+.gen-overlay.show .gen-box{transform:translateY(0)}
+
+/* PDF icon animation */
+.pdf-icon-wrap{
+  width:72px;height:72px;margin:0 auto 20px;
+  position:relative;
+}
+.pdf-icon{
+  width:72px;height:88px;
+  background:var(--white);
+  border:2px solid var(--gray200);
+  border-radius:6px;
+  position:relative;
+  overflow:hidden;
+  box-shadow:0 4px 20px rgba(0,0,0,.1);
+}
+.pdf-icon::before{
+  content:'';
+  position:absolute;top:0;right:0;
+  width:22px;height:22px;
+  background:var(--gray200);
+  clip-path:polygon(0 0,100% 100%,100% 0);
+}
+.pdf-icon-label{
+  position:absolute;bottom:10px;left:50%;transform:translateX(-50%);
+  font-size:9px;font-weight:700;letter-spacing:.08em;
+  color:var(--blue2);background:rgba(30,87,153,.1);
+  padding:2px 7px;border-radius:3px;
+  white-space:nowrap;
+}
+/* progress fill */
+.pdf-fill{
+  position:absolute;bottom:0;left:0;right:0;
+  background:linear-gradient(180deg,rgba(40,120,200,.08),rgba(40,120,200,.18));
+  height:0%;transition:height .1s linear;
+}
+/* scan line */
+.pdf-scan{
+  position:absolute;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,rgba(40,120,200,.6),transparent);
+  top:0;
+  animation:scan 1.4s ease-in-out infinite;
+  opacity:0;
+}
+.pdf-scan.active{opacity:1}
+@keyframes scan{
+  0%{top:5%;opacity:0}
+  10%{opacity:1}
+  90%{opacity:1}
+  100%{top:90%;opacity:0}
+}
+
+.gen-title{
+  font-family:var(--serif);font-size:22px;font-weight:400;
+  color:var(--black);margin-bottom:8px;
+}
+.gen-title em{font-style:italic;color:var(--gray400)}
+
+.gen-steps{
+  display:flex;flex-direction:column;gap:6px;
+  margin:16px 0 0;
+}
+.gen-step{
+  display:flex;align-items:center;gap:10px;
+  padding:9px 14px;border-radius:9px;
+  background:var(--gray50);border:1px solid var(--gray100);
+  font-size:12.5px;font-weight:400;color:var(--gray600);
+  opacity:.4;transition:opacity .3s,border-color .3s;
+  text-align:left;
+}
+.gen-step.active{opacity:1;border-color:rgba(40,120,200,.25);background:rgba(40,120,200,.04);color:var(--black)}
+.gen-step.done{opacity:1;color:var(--gray600)}
+.gen-step-icon{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:10px}
+.gen-step-icon.pending{background:var(--gray200)}
+.gen-step-icon.spinning{background:var(--blue3);animation:spin .8s linear infinite}
+.gen-step-icon.check{background:#22c55e;color:#fff}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ════════════════════════════════════
+   PDF RESULT MODAL
+════════════════════════════════════ */
+.result-overlay{
+  position:fixed;inset:0;
+  background:rgba(15,15,14,.7);
+  backdrop-filter:blur(8px);
+  z-index:200;
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;
+  transition:opacity .4s;
+  padding:20px;
+}
+.result-overlay.show{opacity:1;pointer-events:all}
+
+.result-box{
+  background:var(--white);
+  border-radius:20px;
+  width:min(600px,96vw);
+  max-height:90vh;
+  overflow:hidden;
+  display:flex;flex-direction:column;
+  box-shadow:0 40px 100px rgba(0,0,0,.35);
+  transform:translateY(24px) scale(.97);
+  transition:transform .45s cubic-bezier(.22,1,.36,1);
+}
+.result-overlay.show .result-box{transform:translateY(0) scale(1)}
+
+/* PDF preview area */
+.pdf-preview{
+  flex:1;overflow:hidden;
+  position:relative;
+  background:#f9f9f8;
+  border-bottom:1px solid var(--gray200);
+}
+
+.pdf-doc{
+  padding:36px 40px 20px;
+  font-family:var(--sans);
+  position:relative;
+}
+.pdf-doc-header{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:28px;padding-bottom:16px;
+  border-bottom:2px solid var(--blue2);
+}
+.pdf-doc-logo{
+  font-size:13px;font-weight:700;letter-spacing:.08em;color:var(--blue);
+}
+.pdf-doc-badge{
+  font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--blue2);background:rgba(30,87,153,.08);
+  border:1px solid rgba(30,87,153,.2);
+  padding:3px 10px;border-radius:100px;
+}
+.pdf-doc-title{
+  font-family:var(--serif);font-size:22px;font-weight:400;
+  color:var(--black);margin-bottom:6px;line-height:1.2;
+}
+.pdf-doc-subtitle{
+  font-size:11.5px;font-weight:500;color:var(--blue3);
+  margin-bottom:20px;letter-spacing:.02em;
+}
+.pdf-doc-problem{
+  background:rgba(40,120,200,.05);
+  border-left:3px solid var(--blue3);
+  padding:10px 14px;border-radius:0 6px 6px 0;
+  font-size:12.5px;color:var(--gray600);line-height:1.6;
+  margin-bottom:20px;font-style:italic;
+}
+.pdf-section-label{
+  font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--gray400);margin-bottom:8px;
+}
+.pdf-solution-block{margin-bottom:16px}
+.pdf-solution-title{
+  font-size:13px;font-weight:600;color:var(--black);margin-bottom:4px;
+  display:flex;align-items:center;gap:8px;
+}
+.pdf-solution-title .prod-tag{
+  font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  padding:2px 8px;border-radius:100px;
+  color:var(--blue2);background:rgba(30,87,153,.08);border:1px solid rgba(30,87,153,.2);
+}
+.pdf-solution-desc{
+  font-size:12px;font-weight:300;color:var(--gray600);line-height:1.65;
+}
+.pdf-metric{
+  display:inline-flex;align-items:center;gap:5px;
+  font-size:11px;font-weight:600;color:var(--blue2);
+  background:rgba(30,87,153,.06);border:1px solid rgba(30,87,153,.15);
+  padding:3px 10px;border-radius:100px;margin-top:6px;margin-right:5px;
+}
+
+/* teaser sentence - sits just above the lock label, always visible */
+.pdf-teaser{
+  position:absolute;
+  bottom:68px;
+  left:0;right:0;
+  padding:0 32px;
+  font-size:12.5px;font-weight:400;color:var(--gray800);
+  line-height:1.65;font-style:italic;
+  text-align:center;
+  z-index:10;
+  pointer-events:none;
+}
+.pdf-teaser strong{font-style:normal;font-weight:600;color:var(--blue2)}
+
+/* fade mask at bottom of preview */
+.pdf-fade{
+  position:absolute;bottom:0;left:0;right:0;
+  height:140px;
+  background:linear-gradient(to bottom, transparent, rgba(249,249,248,.98) 70%, rgba(249,249,248,1));
+  pointer-events:none;
+}
+
+/* blur / lock zone */
+.pdf-lock{
+  position:absolute;bottom:0;left:0;right:0;
+  height:38%;
+  backdrop-filter:blur(4px);
+  -webkit-backdrop-filter:blur(4px);
+  background:linear-gradient(to bottom,transparent 0%,rgba(249,249,248,.7) 50%,rgba(249,249,248,.97) 100%);
+  display:flex;flex-direction:column;align-items:center;justify-content:flex-end;
+  padding-bottom:20px;gap:6px;
+}
+.lock-label{
+  font-size:12px;font-weight:500;color:var(--gray600);
+  display:flex;align-items:center;gap:6px;
+}
+.lock-icon{font-size:14px}
+
+/* CTA bar */
+.result-cta-bar{
+  padding:16px 24px;background:var(--white);
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  flex-wrap:wrap;
+}
+.result-cta-text{}
+.result-cta-title{font-size:13.5px;font-weight:600;color:var(--black);margin-bottom:2px}
+.result-cta-sub{font-size:11.5px;font-weight:300;color:var(--gray600)}
+.access-btn{
+  font-family:var(--sans);font-size:13px;font-weight:600;
+  padding:11px 24px;border-radius:9px;border:none;
+  background:linear-gradient(135deg,var(--blue),var(--blue3));
+  color:#fff;cursor:pointer;transition:opacity .15s;white-space:nowrap;flex-shrink:0;
+}
+.access-btn:hover{opacity:.88}
+
+/* ════════════════════════════════════
+   LEAD FORM OVERLAY
+════════════════════════════════════ */
+.form-overlay{
+  position:fixed;inset:0;
+  background:rgba(15,15,14,.75);
+  backdrop-filter:blur(8px);
+  z-index:300;
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;
+  transition:opacity .35s;
+  padding:20px;
+}
+.form-overlay.show{opacity:1;pointer-events:all}
+
+.form-box{
+  background:var(--white);
+  border-radius:20px;
+  width:min(480px,96vw);
+  overflow:hidden;
+  box-shadow:0 40px 100px rgba(0,0,0,.3);
+  transform:translateY(20px) scale(.97);
+  transition:transform .4s cubic-bezier(.22,1,.36,1);
+}
+.form-overlay.show .form-box{transform:translateY(0) scale(1)}
+
+.form-top{
+  background:linear-gradient(135deg,#1a4a7a,#2878c8);
+  padding:28px 28px 24px;position:relative;overflow:hidden;
+}
+.form-top::before{content:'';position:absolute;width:180px;height:180px;background:radial-gradient(circle,rgba(255,255,255,.12),transparent 70%);top:-60px;right:-40px;pointer-events:none}
+.form-top-label{font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:10px}
+.form-top-title{font-family:var(--serif);font-size:22px;font-weight:400;color:#fff;line-height:1.2;margin-bottom:6px}
+.form-top-title em{font-style:italic;color:rgba(255,255,255,.45)}
+.form-top-sub{font-size:12.5px;font-weight:300;color:rgba(255,255,255,.55);line-height:1.55}
+
+.form-body{padding:24px 28px 28px}
+
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+@media(max-width:420px){.form-row{grid-template-columns:1fr}}
+
+.form-field{display:flex;flex-direction:column;gap:5px;margin-bottom:10px}
+.form-field label{font-size:10.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--gray400)}
+.form-field input{
+  font-family:var(--sans);font-size:13.5px;font-weight:300;
+  color:var(--black);background:var(--gray50);
+  border:1px solid var(--gray200);border-radius:8px;
+  padding:10px 14px;outline:none;transition:all .14s;
+}
+.form-field input:focus{border-color:var(--blue3);background:#fff;box-shadow:0 0 0 3px rgba(40,120,200,.07)}
+.form-field input.err{border-color:#fca5a5;background:#fff5f5}
+
+.domain-wrap{position:relative}
+.domain-prefix{
+  position:absolute;left:14px;top:50%;transform:translateY(-50%);
+  font-size:13px;color:var(--gray400);font-weight:400;pointer-events:none;
+}
+.domain-wrap input{padding-left:14px}
+
+.form-note{font-size:11px;color:var(--gray400);margin-top:4px}
+.domain-err{font-size:11px;color:#dc2626;margin-top:4px;display:none}
+
+.submit-btn{
+  width:100%;font-family:var(--sans);font-size:14px;font-weight:600;
+  padding:13px;border-radius:9px;border:none;
+  background:var(--black);color:#fff;
+  cursor:pointer;transition:background .14s;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  margin-top:16px;
+}
+.submit-btn:hover{background:var(--gray800)}
+.submit-btn:disabled{opacity:.38;cursor:not-allowed}
+
+.form-privacy{font-size:10.5px;color:var(--gray400);text-align:center;margin-top:12px;line-height:1.5}
+.form-privacy a{color:var(--gray600);text-decoration:underline}
+
+/* ════════════════════════════════════
+   SUCCESS STATE
+════════════════════════════════════ */
+.success-overlay{
+  position:fixed;inset:0;
+  background:rgba(15,15,14,.7);backdrop-filter:blur(8px);
+  z-index:400;display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;transition:opacity .35s;padding:20px;
+}
+.success-overlay.show{opacity:1;pointer-events:all}
+.success-box{
+  background:var(--white);border-radius:20px;
+  width:min(440px,96vw);padding:44px 36px;text-align:center;
+  box-shadow:0 40px 100px rgba(0,0,0,.25);
+  transform:scale(.95);transition:transform .4s cubic-bezier(.22,1,.36,1);
+}
+.success-overlay.show .success-box{transform:scale(1)}
+.success-check{width:56px;height:56px;border-radius:50%;background:#f0fdf4;border:2px solid #bbf7d0;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:22px}
+.success-title{font-family:var(--serif);font-size:24px;font-weight:400;color:var(--black);margin-bottom:8px}
+.success-sub{font-size:13.5px;font-weight:300;color:var(--gray600);line-height:1.7;margin-bottom:24px}
+.success-pdf-btn{
+  display:inline-flex;align-items:center;gap:8px;
+  background:linear-gradient(135deg,var(--blue),var(--blue3));
+  color:#fff;padding:12px 28px;border-radius:9px;
+  font-size:13px;font-weight:600;border:none;cursor:pointer;
+  text-decoration:none;transition:opacity .15s;
+}
+.success-pdf-btn:hover{opacity:.88}
+.success-footer{font-size:11px;color:var(--gray400);margin-top:14px}
+
+/* footer logos */
+.hero-logos{
+  position:relative;z-index:2;
+  padding:clamp(14px,2vw,22px) clamp(18px,4vw,56px) clamp(20px,3vw,32px);
+  border-top:1px solid rgba(255,255,255,.1);
+}
+.logos-label{font-size:10.5px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.35);text-align:center;margin-bottom:14px}
+.logos-row{display:flex;align-items:center;justify-content:center;gap:clamp(12px,3vw,40px);flex-wrap:wrap}
+.logo-name{font-size:12.5px;font-weight:600;letter-spacing:.06em;color:rgba(255,255,255,.28);transition:color .2s;cursor:default}
+.logo-name:hover{color:rgba(255,255,255,.55)}
+
+/* spinner util */
+.spin{display:inline-block;animation:spin .8s linear infinite}
+
+/* bottom bar footer */
+.page-footer{
+  background:var(--white);padding:16px clamp(14px,5vw,80px);
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;
+  border-top:1px solid var(--gray100);
+}
+.pf-copy{font-size:11px;color:var(--gray400)}
+.pf-links{display:flex;gap:16px}
+.pf-links a{font-size:11px;color:var(--gray400);text-decoration:none;transition:color .14s}
+.pf-links a:hover{color:var(--black)}
+</style>
+</head>
+<body>
+
+<!-- ═══ HERO ═══ -->
+<div class="hero-canvas">
+<section class="hero-section">
+
+  <nav class="hero-nav">
+    <div class="nav-logo">
+      UnitedSignals <span class="nav-x">×</span> FlowNiq
+    </div>
+    <div class="nav-right">
+      <a href="https://united-signals.com/en/" class="nbtn ng" target="_blank">united-signals.com</a>
+      <a href="https://flowniq.com" class="nbtn no" target="_blank">flowniq.com</a>
+      <a href="https://calendly.com/d/cq37-yvk-vbr/flowniq-demo" class="nbtn ns" target="_blank">Book Demo</a>
+    </div>
+  </nav>
+
+  <div class="hero-body">
+    <div class="hero-eyebrow">
+      <span class="eyebrow-dot"></span>
+      AI Organizational Advisor · Frankfurt am Main
+    </div>
+
+    <h1 class="hero-h1">
+      Write down the problems<br>you're having in your org —<br><em>get a solution PDF.</em>
+    </h1>
+
+    <p class="hero-sub">
+      Describe any operational challenge. Our AI generates a tailored solution report based on UnitedSignals and FlowNiq products — delivered as a PDF.
+    </p>
+
+    <!-- Input card -->
+    <div class="input-card">
+      <div class="input-card-head">
+        <div class="ic-label">
+          <span class="ic-dot"></span>
+          Describe your organizational challenge
+        </div>
+      </div>
+      <textarea id="prob" rows="4"
+        placeholder="e.g. Our client onboarding is still paper-based — it takes 3 weeks, our team manually re-enters data into multiple systems, and contracts get lost in email threads…"
+      ></textarea>
+      <div class="input-card-domain">
+        <div class="icd-label">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          Company Domain <span class="icd-required">*</span>
+        </div>
+        <div class="icd-input-wrap">
+          <span class="icd-prefix">https://</span>
+          <input type="text" id="domainInput" placeholder="yourcompany.com" autocomplete="off" spellcheck="false"
+            oninput="clearDomainErr()" />
+        </div>
+        <div class="icd-err" id="domainInputErr">Please enter a valid company domain (e.g. yourcompany.com)</div>
+      </div>
+      <div class="input-card-foot">
+        <div class="chips">
+          <span class="chip" onclick="fill('Our contract signing process is entirely paper-based and takes weeks — we lose deals because of the delays')">Slow contracts</span>
+          <span class="chip" onclick="fill('Client onboarding is manual and paper-heavy — customers drop off and it takes days per client')">Manual onboarding</span>
+          <span class="chip" onclick="fill('All approvals run by email — no central overview and things get stuck or lost')">Approval chaos</span>
+          <span class="chip" onclick="fill('Our back-office is disconnected from our CRM and ERP — still entirely paper-based')">Back-office gaps</span>
+        </div>
+        <button class="go-btn" id="goBtn" onclick="startGeneration()">
+          Generate Solution PDF ↑
+        </button>
+      </div>
+    </div>
+
+    <div class="hero-pills">
+      <div class="hero-pill">📄 AI-generated solution report</div>
+      <div class="hero-pill">⚡ Based on real products</div>
+      <div class="hero-pill">🔒 Free · No spam</div>
+    </div>
+  </div>
+
+  <div class="hero-logos">
+    <div class="logos-label">Trusted by</div>
+    <div class="logos-row">
+      <span class="logo-name">Commerzbank</span>
+      <span class="logo-name">Baader Bank</span>
+      <span class="logo-name">V Bank</span>
+      <span class="logo-name">Comdirect</span>
+      <span class="logo-name">VP Bank</span>
+      <span class="logo-name">St. Galler Kantonalbank</span>
+    </div>
+  </div>
+
+</section>
+</div>
+
+<!-- ═══ GENERATION OVERLAY ═══ -->
+<div class="gen-overlay" id="genOverlay">
+  <div class="gen-box">
+
+    <div style="margin:0 auto 20px;width:64px;height:80px;position:relative">
+      <div class="pdf-icon" id="pdfIcon">
+        <div class="pdf-fill" id="pdfFill"></div>
+        <div class="pdf-scan active" id="pdfScan"></div>
+        <div class="pdf-icon-label">PDF</div>
+      </div>
+    </div>
+
+    <div class="gen-title">Generating your <em>solution report…</em></div>
+    <div id="genDomainTag" style="display:inline-flex;align-items:center;gap:6px;background:rgba(26,74,122,.07);border:1px solid rgba(26,74,122,.18);border-radius:100px;padding:4px 12px;margin:0 auto 16px;font-size:11.5px;font-weight:500;color:#1a4a7a;letter-spacing:.02em;">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#1a4a7a" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+      <span id="genDomainText"></span>
+    </div>
+
+    <div class="gen-steps" id="genSteps">
+      <div class="gen-step" id="step0">
+        <div class="gen-step-icon pending" id="icon0">·</div>
+        <span id="step0Text">Analyzing your organizational challenge</span>
+      </div>
+      <div class="gen-step" id="step1">
+        <div class="gen-step-icon pending" id="icon1">·</div>
+        Matching to UnitedSignals &amp; FlowNiq products
+      </div>
+      <div class="gen-step" id="step2">
+        <div class="gen-step-icon pending" id="icon2">·</div>
+        Building tailored solution framework
+      </div>
+      <div class="gen-step" id="step3">
+        <div class="gen-step-icon pending" id="icon3">·</div>
+        Compiling PDF report
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ═══ RESULT OVERLAY (PDF preview + CTA) ═══ -->
+<div class="result-overlay" id="resultOverlay">
+  <div class="result-box">
+
+    <div class="pdf-preview" id="pdfPreview">
+      <div class="pdf-doc" id="pdfDoc">
+        <!-- dynamically filled -->
+      </div>
+        <div class="pdf-lock">
+        <div class="lock-label"><span class="lock-icon">🔒</span> Full report locked — access your PDF below</div>
+      </div>
+      <div class="pdf-teaser" id="pdfTeaser"></div>
+    </div>
+
+    <div class="result-cta-bar">
+      <div class="result-cta-text">
+        <div class="result-cta-title">Generate AI Report</div>
+        <div class="result-cta-sub">Enter your details to access the full PDF</div>
+      </div>
+      <button class="access-btn" onclick="openForm()">Access the PDF →</button>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ═══ LEAD FORM ═══ -->
+<div class="form-overlay" id="formOverlay">
+  <div class="form-box">
+
+    <div class="form-top">
+      <div class="form-top-label">Get your free report</div>
+      <div class="form-top-title">Access your<br><em>solution PDF</em></div>
+      <div class="form-top-sub">Your tailored report is ready. Enter your details below to receive the full solution breakdown.</div>
+    </div>
+
+    <div class="form-body">
+      <div class="form-row">
+        <div class="form-field">
+          <label>First Name *</label>
+          <input type="text" id="fFirstName" placeholder="Jane" autocomplete="given-name"/>
+        </div>
+        <div class="form-field">
+          <label>Last Name *</label>
+          <input type="text" id="fLastName" placeholder="Smith" autocomplete="family-name"/>
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label>Company Name *</label>
+        <input type="text" id="fCompany" placeholder="Acme GmbH" autocomplete="organization"/>
+      </div>
+
+      <div class="form-field">
+        <label>Company Email *</label>
+        <input type="email" id="fEmail" placeholder="jane@acme.com" autocomplete="email"/>
+        <div class="form-note">Must include a valid company domain (e.g. @yourcompany.com)</div>
+        <div class="domain-err" id="domainErr">⚠ Please use your company email address (no gmail, hotmail, etc.)</div>
+      </div>
+
+      <button class="submit-btn" id="submitBtn" onclick="submitForm()">
+        Get my PDF Report →
+      </button>
+
+      <div class="form-privacy">
+        By submitting, you agree to our <a href="https://flowniq.com/datenschutzerklaerung/" target="_blank">Privacy Policy</a>. We won't spam you.
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ═══ SUCCESS ═══ -->
+<div class="success-overlay" id="successOverlay">
+  <div class="success-box">
+    <div class="success-check">✓</div>
+    <div class="success-title">Your report is ready</div>
+    <div class="success-sub" id="successMsg">
+      We've sent your personalized solution report to your email. Here's a direct link to your PDF:
+    </div>
+    <button class="success-pdf-btn" id="successPdfBtn">
+      📄 Download PDF Report
+    </button>
+    <div class="success-footer">
+      Questions? Reach us at <a href="/cdn-cgi/l/email-protection#83e0ecedf7e2e0f7c3e5efecf4edeaf2ade0ecee" style="color:var(--blue3)"><span class="__cf_email__" data-cfemail="a3c0cccdd7c2c0d7e3c5cfccd4cdcad28dc0ccce">[email&#160;protected]</span></a>
+    </div>
+  </div>
+</div>
+
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// ── BLOCKED DOMAINS (free email) ──────────────────────────────────────────
+const FREE_DOMAINS = ['gmail','googlemail','yahoo','hotmail','outlook','icloud','me','mac','live','msn','aol','web','gmx','t-online','freenet','arcor','1und1','protonmail','tutanota','mailbox'];
+
+function isBusinessEmail(email){
+  const domain = email.split('@')[1];
+  if(!domain) return false;
+  const prefix = domain.split('.')[0].toLowerCase();
+  return !FREE_DOMAINS.includes(prefix);
+}
+
+// ── SYSTEM PROMPT ─────────────────────────────────────────────────────────
+const SYSTEM = `You are the official AI product advisor for United Signals GmbH and their no-code workflow product FlowNiq. Generate a structured solution report for the organizational problem described.
+
+ONLY recommend solutions based on these real, verified products:
+
+UNITED SIGNALS (united-signals.com):
+1. DIGITAL ONBOARDING — Fully digital, paperless customer onboarding. Location-independent, white-label, integrates e-signature and KYC. Used by Commerzbank, Baader Bank, Comdirect, V Bank, VP Bank, St. Galler Kantonalbank. Results: 60% shorter onboarding time.
+2. PAPERLESS CONTRACTS — Converts paper contracts into digital, automated web-based flows. Eliminates duplicate data entry. CRM/ERP integration. Results: 60% faster contract completion, 70% higher completion rate.
+3. BUSINESS CONTROL CENTER (BCC) — Central hub for all document processes, cross-departmental approvals, workflow management. Integrates with CRM and ERP systems. Replaces email-based approval chains.
+4. DIGITAL CLIENT PORTALS — Interactive portals for paperless client communication, self-service and document exchange.
+
+FLOWNIQ (flowniq.com) — by United Signals:
+1. PDF TO WORKFLOW TRANSFORMATION — Upload any PDF; converts instantly to a digital workflow. No coding.
+2. DRAG & DROP WORKFLOW DESIGNER — Visual no-code builder for forms, contracts, approvals. Any user can build flows.
+3. INTEGRATED AI FUNCTION — AI-assisted workflow creation. Supports OpenAI and other LLMs.
+4. APPROVAL PROCESS MANAGEMENT — Role-based approvals, multi-user cross-department flows, automated routing.
+5. DIGITAL SIGNATURES — Legally binding e-signatures, connects to preferred signature providers.
+
+Verified results: 60% shorter onboarding, 60% faster contracts, 80% paper savings, 40% reduced admin costs, 70% higher completion rate.
+
+RESPONSE FORMAT — You must return ONLY a JSON object, no markdown, no backticks, no preamble:
+{
+  "problem_summary": "One concise sentence summarizing the core problem",
+  "solutions": [
+    {
+      "product": "Exact product name",
+      "brand": "UnitedSignals or FlowNiq",
+      "headline": "Short action-oriented headline (max 8 words)",
+      "description": "2-3 sentences explaining exactly how this product solves their specific problem",
+      "metrics": ["metric1", "metric2"]
+    }
+  ],
+  "next_step": "One specific recommended next step",
+  "industry_note": "Optional: one sentence if there is an especially relevant industry use case"
+}
+
+Return 2-3 solutions. Keep descriptions specific to the user's problem, not generic.
+Reply in the language the user wrote in (German or English).`;
+
+let aiResult = null;
+let userProblem = '';
+let userDomain = '';
+
+function fill(t){ document.getElementById('prob').value = t; document.getElementById('prob').focus(); }
+
+function esc(t){ return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function clearDomainErr(){
+  document.getElementById('domainInputErr').style.display='none';
+  document.getElementById('domainInput').closest('.icd-input-wrap').classList.remove('err-state');
+}
+
+function isValidDomain(d){
+  // simple domain check: at least one dot, no spaces, no @
+  return /^[a-zA-Z0-9][a-zA-Z0-9\-\.]{1,61}[a-zA-Z0-9]\.[a-zA-Z]{2,}$/.test(d.replace(/^www\./,''));
+}
+
+async function callAPI(problem){
+  const r = await fetch('https://api.anthropic.com/v1/messages',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({
+      model:'claude-sonnet-4-20250514',
+      max_tokens:1200,
+      system: SYSTEM,
+      messages:[{role:'user', content:`Here is the organizational problem:\n\n${problem}`}]
+    })
+  });
+  if(!r.ok){const e=await r.json().catch(()=>({}));throw new Error(e.error?.message||`API error ${r.status}`)}
+  const d = await r.json();
+  const text = d.content[0]?.text || '';
+  // strip possible markdown fences
+  const clean = text.replace(/```json|```/g,'').trim();
+  return JSON.parse(clean);
+}
+
+// ── STEP ANIMATION ─────────────────────────────────────────────────────────
+function setStep(i, state){
+  const step = document.getElementById('step'+i);
+  const icon = document.getElementById('icon'+i);
+  step.classList.remove('active','done');
+  icon.className = 'gen-step-icon';
+  if(state==='active'){
+    step.classList.add('active');
+    icon.classList.add('spinning');
+    icon.textContent='↻';
+  } else if(state==='done'){
+    step.classList.add('done');
+    icon.classList.add('check');
+    icon.textContent='✓';
+  }
+}
+
+function animatePdfFill(pct){
+  document.getElementById('pdfFill').style.height = pct+'%';
+}
+
+// ── MAIN FLOW ──────────────────────────────────────────────────────────────
+async function startGeneration(){
+  const prob = document.getElementById('prob').value.trim();
+  const rawDomain = document.getElementById('domainInput').value.trim().replace(/^https?:\/\//,'').replace(/\/.*$/,'').toLowerCase();
+
+  // Validate problem
+  if(!prob) {
+    document.getElementById('prob').focus();
+    return;
+  }
+
+  // Validate domain
+  if(!rawDomain || !isValidDomain(rawDomain)){
+    document.getElementById('domainInputErr').style.display='block';
+    document.getElementById('domainInput').closest('.icd-input-wrap').classList.add('err-state');
+    document.getElementById('domainInput').focus();
+    return;
+  }
+
+  userProblem = prob;
+  userDomain = rawDomain;
+  document.getElementById('goBtn').disabled = true;
+
+  // Show domain tag in generation overlay
+  document.getElementById('genDomainText').textContent = rawDomain;
+  document.getElementById('step0Text').textContent = 'Analysing ' + rawDomain + ' and your challenge';
+
+  // Show overlay
+  document.getElementById('genOverlay').classList.add('show');
+
+  // Reset steps
+  [0,1,2,3].forEach(i=>setStep(i,''));
+  animatePdfFill(0);
+
+  // Step 0
+  setStep(0,'active');
+  animatePdfFill(10);
+  await delay(800);
+  setStep(0,'done');
+
+  // Step 1
+  setStep(1,'active');
+  animatePdfFill(35);
+
+  // Fire API call in parallel with animation
+  const apiPromise = callAPI(prob).catch(err=>({error:err.message}));
+
+  await delay(1000);
+  setStep(1,'done');
+
+  // Step 2
+  setStep(2,'active');
+  animatePdfFill(65);
+  await delay(900);
+  setStep(2,'done');
+
+  // Step 3
+  setStep(3,'active');
+  animatePdfFill(85);
+
+  // Wait for API
+  const result = await apiPromise;
+
+  await delay(600);
+  setStep(3,'done');
+  animatePdfFill(100);
+  await delay(400);
+
+  // Hide gen overlay
+  document.getElementById('genOverlay').classList.remove('show');
+  await delay(400);
+
+  if(result.error){
+    alert('Something went wrong: '+result.error);
+    document.getElementById('goBtn').disabled=false;
+    return;
+  }
+
+  aiResult = result;
+  buildPdfPreview(result, prob, userDomain);
+
+  // Show result overlay
+  document.getElementById('resultOverlay').classList.add('show');
+}
+
+// ── BUILD PDF PREVIEW ──────────────────────────────────────────────────────
+function buildPdfPreview(data, problem, domain){
+  const el = document.getElementById('pdfDoc');
+  const date = new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'long',year:'numeric'});
+
+  let solutionsHtml = '';
+  (data.solutions||[]).slice(0,2).forEach((s,i)=>{
+    const metricsHtml = (s.metrics||[]).map(m=>`<span class="pdf-metric">↑ ${esc(m)}</span>`).join('');
+    solutionsHtml += `
+      <div class="pdf-solution-block">
+        <div class="pdf-solution-title">
+          ${esc(s.product)} <span class="prod-tag">${esc(s.brand)}</span>
+        </div>
+        <div class="pdf-solution-desc">${esc(s.description)}</div>
+        ${metricsHtml ? `<div style="margin-top:6px">${metricsHtml}</div>` : ''}
+      </div>`;
+  });
+
+  el.innerHTML = `
+    <div class="pdf-doc-header">
+      <div class="pdf-doc-logo">UnitedSignals × FlowNiq</div>
+      <div class="pdf-doc-badge">AI Solution Report</div>
+    </div>
+    <div class="pdf-doc-title">Your AI Transformation Roadmap</div>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px;flex-wrap:wrap;">
+      <div class="pdf-doc-subtitle" style="margin-bottom:0">Personalized solution — generated ${esc(date)}</div>
+      <div style="display:inline-flex;align-items:center;gap:5px;background:rgba(26,74,122,.06);border:1px solid rgba(26,74,122,.18);border-radius:100px;padding:3px 10px;">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#1a4a7a" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        <span style="font-size:10.5px;font-weight:600;color:#1a4a7a;letter-spacing:.02em;">${esc(domain)}</span>
+      </div>
+    </div>
+    <div class="pdf-section-label">Problem Identified</div>
+    <div class="pdf-doc-problem">"${esc(data.problem_summary||problem.substring(0,160))}"</div>
+    <div class="pdf-section-label">Recommended Solutions</div>
+    ${solutionsHtml}
+  `;
+
+  // Teaser: first solution name + one-line hint
+  const firstSol = (data.solutions||[])[0];
+  const teaserEl = document.getElementById('pdfTeaser');
+  if(firstSol && teaserEl){
+    teaserEl.innerHTML = `The report outlines how <strong>${esc(firstSol.product)}</strong> can directly address this — ${esc((firstSol.description||'').split('.')[0])}.`;
+  }
+}
+
+// ── FORM ───────────────────────────────────────────────────────────────────
+function openForm(){
+  document.getElementById('resultOverlay').classList.remove('show');
+  setTimeout(()=>document.getElementById('formOverlay').classList.add('show'),300);
+}
+
+function submitForm(){
+  const fn = document.getElementById('fFirstName').value.trim();
+  const ln = document.getElementById('fLastName').value.trim();
+  const co = document.getElementById('fCompany').value.trim();
+  const em = document.getElementById('fEmail').value.trim();
+  const errEl = document.getElementById('domainErr');
+
+  // Reset errors
+  ['fFirstName','fLastName','fCompany','fEmail'].forEach(id=>{
+    document.getElementById(id).classList.remove('err');
+  });
+  errEl.style.display='none';
+
+  let valid = true;
+  if(!fn){document.getElementById('fFirstName').classList.add('err');valid=false}
+  if(!ln){document.getElementById('fLastName').classList.add('err');valid=false}
+  if(!co){document.getElementById('fCompany').classList.add('err');valid=false}
+  if(!em||!em.includes('@')){document.getElementById('fEmail').classList.add('err');valid=false}
+  else if(!isBusinessEmail(em)){
+    document.getElementById('fEmail').classList.add('err');
+    errEl.style.display='block';
+    valid=false;
+  }
+  if(!valid) return;
+
+  const btn = document.getElementById('submitBtn');
+  btn.disabled=true;
+  btn.innerHTML='<span class="spin">↻</span> Processing…';
+
+  // Simulate submission
+  setTimeout(()=>{
+    document.getElementById('formOverlay').classList.remove('show');
+    setTimeout(()=>{
+      document.getElementById('successMsg').textContent =
+        `We've sent your personalized solution report to ${em}. Here's your direct download link:`;
+      document.getElementById('successOverlay').classList.add('show');
+      // Trigger PDF download
+      document.getElementById('successPdfBtn').onclick = ()=>generateAndDownloadPDF(fn, ln, co, em, userDomain);
+    },300);
+  },1400);
+}
+
+// ── PDF DOWNLOAD (generates a simple HTML→PDF via print) ──────────────────
+function generateAndDownloadPDF(fn, ln, co, em, domain){
+  if(!aiResult) return;
+  const date = new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'long',year:'numeric'});
+
+  let solutionsHtml = '';
+  (aiResult.solutions||[]).forEach((s,i)=>{
+    const metrics = (s.metrics||[]).map(m=>`<li>${m}</li>`).join('');
+    solutionsHtml += `
+      <div style="margin-bottom:24px;padding:18px;background:#f7f7f6;border-radius:8px;border-left:3px solid #1e5799;">
+        <div style="font-size:15px;font-weight:600;color:#0f0f0e;margin-bottom:4px;">${s.product} <span style="font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:2px 8px;border-radius:100px;color:#1e5799;background:rgba(30,87,153,.1);border:1px solid rgba(30,87,153,.2);">${s.brand}</span></div>
+        <div style="font-size:13px;font-weight:600;color:#1e5799;margin-bottom:6px;">${s.headline}</div>
+        <div style="font-size:13px;color:#6b6a65;line-height:1.65;">${s.description}</div>
+        ${metrics?`<ul style="margin-top:10px;padding-left:16px;font-size:12px;color:#1e5799;">${metrics}</ul>`:''}
+      </div>`;
+  });
+
+  const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Solution Report</title>
+  <style>
+    body{font-family:'Inter',system-ui,sans-serif;color:#0f0f0e;max-width:680px;margin:0 auto;padding:40px 32px;font-size:14px;line-height:1.6;}
+    h1{font-family:Georgia,serif;font-size:28px;font-weight:400;margin-bottom:4px;}
+    @media print{body{padding:20px}}
+  </style></head><body>
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;padding-bottom:16px;border-bottom:2px solid #1e5799;">
+    <div style="font-size:14px;font-weight:700;letter-spacing:.08em;color:#1a4a7a;">UnitedSignals × FlowNiq</div>
+    <div style="font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:3px 10px;border-radius:100px;color:#1e5799;background:rgba(30,87,153,.08);border:1px solid rgba(30,87,153,.2);">AI Solution Report</div>
+  </div>
+  <h1>Your AI Transformation Roadmap</h1>
+  <div style="font-size:12px;font-weight:500;color:#1e5799;margin-bottom:2px;letter-spacing:.02em;">Prepared for: ${fn} ${ln} · ${co}</div>
+  <div style="display:inline-flex;align-items:center;gap:5px;background:rgba(26,74,122,.06);border:1px solid rgba(26,74,122,.16);border-radius:100px;padding:3px 10px;margin-bottom:4px;">
+    <span style="font-size:11px;font-weight:600;color:#1a4a7a;">🌐 ${domain}</span>
+  </div>
+  <div style="font-size:11px;color:#aeada8;margin-bottom:24px;">${em} · Generated ${date}</div>
+  <div style="font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#aeada8;margin-bottom:8px;">Problem Identified</div>
+  <div style="background:rgba(40,120,200,.05);border-left:3px solid #2878c8;padding:12px 16px;border-radius:0 6px 6px 0;font-size:13px;color:#6b6a65;line-height:1.6;font-style:italic;margin-bottom:24px;">"${aiResult.problem_summary||userProblem.substring(0,200)}"</div>
+  <div style="font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#aeada8;margin-bottom:14px;">Recommended Solutions</div>
+  ${solutionsHtml}
+  ${aiResult.industry_note?`<div style="margin-top:16px;padding:12px 16px;background:#f0f9f0;border-radius:6px;font-size:12px;color:#15803d;"><strong>Industry Note:</strong> ${aiResult.industry_note}</div>`:''}
+  <div style="margin-top:28px;padding:16px;background:#0f0f0e;border-radius:8px;color:#fff;text-align:center;">
+    <div style="font-size:13px;font-weight:600;margin-bottom:4px;">${aiResult.next_step||'Book a free 30-minute consultation to implement these solutions.'}</div>
+    <div style="font-size:11px;color:rgba(255,255,255,.5);">united-signals.com/en/solutions/ · flowniq.com · contact@flowniq.com</div>
+  </div>
+  <div style="margin-top:24px;font-size:10px;color:#aeada8;text-align:center;border-top:1px solid #e2e1de;padding-top:14px;">
+    © United Signals GmbH · Kennedyallee 93 · 60596 Frankfurt am Main
+  </div>
+  </body></html>`;
+
+  const blob = new Blob([html],{type:'text/html'});
+  const url = URL.createObjectURL(blob);
+ 
